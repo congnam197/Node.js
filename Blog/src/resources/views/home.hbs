@@ -1,0 +1,29 @@
+<div class="mt-4 mb-4">
+  <div class="row">
+    <p>
+      <strong>368.232+</strong>
+      người khác đã học
+    </p>
+    <h3>Khóa học miễn phí</h3>
+  </div>
+  <div class="row">
+    {{#each courses}}
+      <div class="col-sm-4 col-lg 6 mt-4">
+        <div class="card">
+          <a href="/courses/{{this.slug}}">
+            <img
+              src="{{this.image}}"
+              class="card-img-top"
+              alt="{{this.image}}"
+            />
+          </a>
+          <div class="card-body">
+            <a href="/courses/{{this.slug}}">
+              <h5 class="card-title">{{this.name}}</h5>
+            </a>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>
