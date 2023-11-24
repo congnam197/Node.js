@@ -3,7 +3,7 @@
     <h2>Khoá học của tôi </h2>
   </div>
   <div class="row">
-    <a class=" btn btn-primary col-auto me-auto position-relative" href="/me/trash/courses">
+    <a class=" btn btn-primary col-auto me-auto position-relative" href="/admin/trash/courses">
     <i class="bi bi-trash"></i> Thùng rác</i>
   <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
    {{deletedCount}}
@@ -16,7 +16,8 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Tên Khóa Học
-          {{!-- _sort ở middleware --}}
+          {{!-- _sort ở middleware --- helper :sortable --}}
+           
           {{{sortable 'name' _sort}}}
         </th>
         <th scope="col">Trình độ

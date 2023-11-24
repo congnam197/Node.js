@@ -7,11 +7,20 @@ const port = 3000;
 const router = require("./routes");
 const moment = require("moment");
 const db = require("./config/db");
+//biến môi trường
+const env = require("dotenv");
 //middleWare
 const SortMiddleware = require("./app/middleware/SortMiddleware");
 
 //thêm các phương thức submit cho form
 const methodOverride = require("method-override");
+
+const cookieParser = require("cookie-parser");
+
+app.use(cookieParser());
+
+//config biến mt
+env.config();
 
 app.use(methodOverride("_method"));
 
@@ -68,6 +77,9 @@ app.engine(
           <i class="${icon}"></i>
         </a>`;
       },
+      // notification: (message) => {
+      //  return `<div id="sweetalert" hidden > ${message} </div>`
+      // },
     },
   })
 );

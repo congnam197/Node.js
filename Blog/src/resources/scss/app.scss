@@ -1,5 +1,6 @@
 
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css");
 .app{
     font-size: 16px;
 }
@@ -22,4 +23,14 @@ a{
 .card{
     width: 22rem;
     height: max-content;
+}
+
+:root {
+  --firstColor: #ff416c;
+  --secoundColor: #ff4b2b;
+}
+
+.title{
+  text-align: center;
+  justify-content: center;
 }

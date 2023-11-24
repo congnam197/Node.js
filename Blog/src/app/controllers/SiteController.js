@@ -18,7 +18,16 @@ class SiteController {
       })
       .catch(next);
 
-    // res.render('home');
+  }
+
+  //[GET] /login
+  login(req, res) {
+    res.render("login");
+  }
+
+  //[GET] /register
+  register(req, res) {
+    res.render("register");
   }
 }
 module.exports = new SiteController();

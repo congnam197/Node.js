@@ -2,10 +2,9 @@ const Course = require("../model/Course");
 const { multipleMongooseToObject } = require("../../util/mongoose");
 const moment = require("moment");
 
-class MeController {
-  //[GET] /me/stored/courses
+class AdminController {
+  //[GET] /admin/stored/courses
   storedCourses(req, res, next) {
-      
     let courseQuery = Course.find({});
 
     //sắp xếp
@@ -30,7 +29,7 @@ class MeController {
       .catch(next);
   }
 
-  //[GET] /me/trash/course
+  //[GET] /admin/trash/course
   trashCourses(req, res, next) {
     Course.findWithDeleted({ deleted: true })
       .sort({ deletedAt: -1 })
@@ -43,4 +42,4 @@ class MeController {
       .catch(next);
   }
 }
-module.exports = new MeController();
+module.exports = new AdminController();

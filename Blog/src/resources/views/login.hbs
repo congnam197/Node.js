@@ -1,0 +1,87 @@
+<div class="mt-4 mb-4">
+  <div id="message" hidden>{{message}}</div>
+  <div class="title">
+    <h1>Đăng nhập</h1>
+  </div>
+  <form method="POST" action="/user/login" class="mt-4 justify-content-center">
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+      <label class="form-label" for="email">Email </label>
+      <input type="text" id="email" class="form-control" name="email" />
+      <div class="text-danger">{{error.email}}</div>
+    </div>
+
+    <!-- Password input -->
+    <div class="form-outline mb-4">
+      <label class="form-label" for="password">Mật khẩu</label>
+      <input
+        type="password"
+        id="password"
+        class="form-control"
+        name="password"
+      />
+      <div class="text-danger">{{error.password}}</div>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary btn-block mb-4">Đăng nhập</button>
+
+    <!-- 2 column grid layout for inline styling -->
+    <div class="row mb-4">
+      <div class="col d-flex justify-content-center">
+        <!-- Checkbox -->
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="form2Example31"
+            checked
+          />
+          <label class="form-check-label" for="form2Example31">
+            Nhớ mật khẩu
+          </label>
+        </div>
+      </div>
+
+      <div class="col">
+        <!-- Simple link -->
+        <a href="#!">Bạn quên mật khẩu?</a>
+      </div>
+    </div>
+
+    <!-- Register buttons -->
+    <div class="text-center">
+      <p>Bạn chưa có tài khoản? <a href="/register">Đăng kí</a></p>
+      <p>Hoặc đăng nhập với:</p>
+      <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-facebook-f"></i>
+      </button>
+
+      <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-google"></i>
+      </button>
+
+      <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-twitter"></i>
+      </button>
+
+      <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fab fa-github"></i>
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  var message = document.getElementById('message').textContent;
+  if(message !=undefined){
+    Swal.fire({
+      text: message,
+      icon: 'error',
+      timer:2000,
+      showConfirmButton:false
+  })
+  }
+
+</script>
