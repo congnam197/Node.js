@@ -15,6 +15,11 @@ class CourseController {
 
   //[GET] /courses/create
   create(req, res, next) {
+    const message =res.authError;
+    if(message){
+      res.render("error/error-page");
+    }
+  
     res.render("courses/create");
   }
 

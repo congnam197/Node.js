@@ -34,6 +34,7 @@ class UserController {
           //   { expiresIn: "1h" }
           // );
           //console.log("token:", token);
+
           res.redirect("/login");
         }
       } catch (error) {
@@ -43,23 +44,27 @@ class UserController {
 
   //[POST] user/login
   login = async (req, res) => {
-    const { email, password } = req.body;
-    const error = req.data;
+    const { email, password } = req.body; //information user
+    const error = req.data; // validate error
     if (error) {
       res.render("login", { error });
     } else {
       try {
         const existingUser = await user.findOne({ email });
-        const isPasswordCrt = await bcrypt.compare(
-          password,
-          existingUser.password
-        );
         if (!existingUser) {
+          console.log("lỗi email tồn tại");
           const message = "Người dùng không tồn tại.";
           res.render("login", { message });
-        } else if (!isPasswordCrt) {
-          res.render("login", { message: "Mật khẩu không đúng" });
         } else {
+          const isPasswordCrt = await bcrypt.compare(
+            password,
+            existingUser.password
+          );
+          if(!isPasswordCrt){
+            console.log("lỗi password tồn tại");
+            const message = "Mật khẩu không đúng";
+             res.render("login", { message });
+          }else {
           const option = {
             maxAge: 20 * 60 * 1000, //20p
             httpOnly: true, //The cookie is only accessible by the web server
@@ -72,14 +77,16 @@ class UserController {
             { expiresIn: "1h" }
           );
           res.cookie("SessionID", token, option);
-          res.cookie("user", existingUser.name);
+          // res.cookie("user", existingUser.name,option);
           res.redirect("/home");
         } 
-      } catch (error) {
+      }
+       
+    }catch (error) {
         console.log(error);
       }
     }
-  };
+  }
 
   // [PATH] /user/update/id
   updateProfile = async (req, res) => {

@@ -15,13 +15,14 @@ const Verify = async (req, res, next) => {
         return res.status(401).json({
           message: "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại",
         });
-      }
+      }else{
       const { id } = decoded;
       const user = await User.findById(id).lean();
       const { password, ...data } = user;
       req.user = data;
-      next();
-    });
+      next();  
+    }
+  });
   } catch (error) {
     res.status(500).json({
       message: "Internal Server Error",

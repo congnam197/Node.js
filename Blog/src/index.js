@@ -77,9 +77,9 @@ app.engine(
           <i class="${icon}"></i>
         </a>`;
       },
-      // notification: (message) => {
-      //  return `<div id="sweetalert" hidden > ${message} </div>`
-      // },
+      checkCookie: () => {
+       
+      },
     },
   })
 );

@@ -8,5 +8,6 @@ router.get('/news',siteController.news);
 router.get('/home',siteController.home);
 router.get('/login',siteController.login);
 router.get('/register',siteController.register);
+router.get('/error-404',siteController.errorPage);
 
 module.exports = router;

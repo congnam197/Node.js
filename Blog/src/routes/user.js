@@ -6,7 +6,6 @@ const Verify = require("../app/middleware/verify/Verify")
 //import đối tượng HomeController
 const userController = require("../app/controllers/UserController");
 const Validate = require("../app/middleware/Validator");
-
 router.post(
   "/register",
   check("email")

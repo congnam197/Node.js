@@ -29,5 +29,10 @@ class SiteController {
   register(req, res) {
     res.render("register");
   }
+
+  //[GET] /error-404
+  errorPage(req, res) {
+    res.render("error/error-page");
+  }
 }
 module.exports = new SiteController();
