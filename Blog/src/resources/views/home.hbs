@@ -1,5 +1,7 @@
 <div class="mt-4 mb-4">
-  <div class="row">
+      {{#if success_messages }}
+      <div id="message">{{success_messages}}</div>
+    {{/if}}  <div class="row">
     <p>
       <strong>368.232+</strong>
       người khác đã học
@@ -27,4 +29,17 @@
     {{/each}}
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  var message = document.getElementById('message').textContent;
+  console.log(message); 
+  if(message !=""){ 
+    Swal.fire({
+      text:message,
+      icon:"success",
+      timer:2000,
+      showConfirmButton :false
+    }) 
+  }
 
+</script>

@@ -5,9 +5,13 @@ const VerifyRole = require("../app/middleware/verify/VerifyRole");
 //import đối tượng HomeController
 const courseController = require("../app/controllers/CourseController");
 
-router.get("/create",Verify,VerifyRole, courseController.create);
+router.get("/create",
+//  Verify,VerifyRole,
+ courseController.create);
 router.post("/store", courseController.store);
-router.get("/:id/edit",Verify,VerifyRole,  courseController.editCourse);
+router.get("/:id/edit",
+//Verify,VerifyRole, 
+ courseController.editCourse);
 router.patch("/:id/restore", courseController.restore);
 router.put("/:id", courseController.update);
 router.delete("/:id", courseController.delete);

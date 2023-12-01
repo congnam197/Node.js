@@ -23,7 +23,12 @@
     </div>
     <div class="mb-3">
       <label for="level" class="form-label">Trình độ </label>
-      <input type="text" class="form-control" id="level" name="level" />
+      <select name="level" id= "level" class="form-control">
+        <option value="">--Chọn trình độ--</option>
+     {{#each levels}}
+     <option value={{this._id}}>{{this.level}}</option>
+     {{/each}}
+      </select>
     </div>
     <div class="row justify-content-between container">
       <a href="/me/stored/courses" class="btn btn-primary me-auto col-2">Quay

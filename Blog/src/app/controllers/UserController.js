@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const Swal = require("sweetalert2");
-
+const nodemailer = require("nodemailer");
 const user = require("../model/User");
+const { Result } = require("express-validator");
+const { mongooseToObject } = require("../../util/mongoose");
 
 class UserController {
   //[POST] user/register
@@ -16,7 +17,6 @@ class UserController {
       try {
         const existingUser = await user.findOne({ email });
         if (existingUser) {
-          console.log("lỗi email tồn tại");
           const message = "Email đã tồn tại ";
           res.render("register", { message });
         } else {
@@ -27,19 +27,68 @@ class UserController {
             email,
             password: hashedPassword,
           });
-          console.log("user :", newUser);
-          // const token = jwt.sign(
-          //   { email: newUser.email, id: newUser._id },
-          //   process.env.JWT_SECRET,
-          //   { expiresIn: "1h" }
-          // );
-          //console.log("token:", token);
 
-          res.redirect("/login");
+          const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: process.env.EMAIL,
+              pass: process.env.PASS,
+            },
+          });
+
+          const token = jwt.sign(
+            { email: newUser.email, id: newUser._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+          );
+          const url = `http://localhost:3000/user/verification/${token}`;
+
+          const mailOptions = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: "Xác nhận email để hoàn tất đăng ký !!",
+            text: "Xác minh email",
+            html: `<p>Nhấp vào liên kết này để xác minh email của bạn. <a href="${url}">Nhấn vào đây</a></p> `,
+          };
+          transporter.sendMail(mailOptions, (err, info) => {
+            if (err) throw err;
+            console.log(info);
+            res.status(201).json({
+              status: "Đăng kí thành công",
+              message: " Vui lòng kiểm tra email để xác thực tài khoản",
+            });
+          });
+
+          // const date = new Intl.DateTimeFormat("en-US", {
+          //   year: "numeric",
+          //   month: "numeric",
+          //   day: "numeric",
+          //   hour: "numeric",
+          //   minute: "numeric",
+          //   second: "numeric",
+          //   hour12: true,
+          // }).format(new Date());
         }
       } catch (error) {
-        console.log("Internal Server Error");
+        console.log(error);
       }
+  };
+
+  //[GET] /user/verification
+  verification = async (req, res, next) => {
+    const { id } = jwt.verify(req.params.token, process.env.JWT_SECRET);
+    if (id) {
+      const updatedUser = await user.findByIdAndUpdate(id, { confirmed: true });
+      if (updatedUser) {
+        res.redirect("/login");
+      } else {
+        res.status(404);
+        throw new Error("Không tìm thấy người dùng");
+      }
+    } else {
+      res.status(404);
+      throw new Error("Không tìm thấy người dùng");
+    }
   };
 
   //[POST] user/login
@@ -60,38 +109,40 @@ class UserController {
             password,
             existingUser.password
           );
-          if(!isPasswordCrt){
+          if (!isPasswordCrt) {
             console.log("lỗi password tồn tại");
             const message = "Mật khẩu không đúng";
-             res.render("login", { message });
-          }else {
-          const option = {
-            maxAge: 20 * 60 * 1000, //20p
-            httpOnly: true, //The cookie is only accessible by the web server
-            secure: true,
-            sameSite: "None",
-          };
-          const token = jwt.sign(
-            { email: existingUser.email, id: existingUser._id },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
-          );
-          res.cookie("SessionID", token, option);
-          // res.cookie("user", existingUser.name,option);
-          res.redirect("/home");
-        } 
-      }
-       
-    }catch (error) {
+            res.render("login", { message });
+          } else {
+            const option = {
+              maxAge: 20 * 60 * 1000, //20p
+              httpOnly: true, //The cookie is only accessible by the web server
+              secure: true,
+              sameSite: "None",
+            };
+            const token = jwt.sign(
+              { email: existingUser.email, id: existingUser._id },
+              process.env.JWT_SECRET,
+              { expiresIn: "1h" }
+            );
+
+            res.cookie("SessionID", token, option);
+            req.session.user = existingUser;
+            console.log(existingUser);
+            req.flash("success", "Đăng nhập thành công");
+            res.redirect("/home");
+          }
+        }
+      } catch (error) {
         console.log(error);
       }
     }
-  }
+  };
 
   // [PATH] /user/update/id
   updateProfile = async (req, res) => {
     const { id: _id } = req.params;
-    const { name, about, tags } = req.body;
+    const { name, avatar } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(_id)) {
       return res.status(404).send("user not unavailable...");
@@ -99,7 +150,7 @@ class UserController {
     try {
       const updatedProfile = await user.findByIdAndUpdate(
         _id,
-        { $set: { name: name, about: about, tags: tags } },
+        { $set: { name: name, avatar: avatar } },
         { new: true }
       );
       res.status(200).json(updatedProfile);
@@ -108,11 +159,25 @@ class UserController {
     }
   };
 
+  //[GET] /user/info/id
+  getInfo = async (req, res, next) => {
+    const {id:_id} = req.params;
+    user
+      .findById(_id )
+      .lean()
+      .then((user) => {
+        console.log(user);
+        res.render("me/infoUser", { user: mongooseToObject(user) });
+      })
+      .catch(next);
+  };
+
   //[GET] /user/logout
   logout = async (req, res, next) => {
     res.clearCookie("SessionID");
     res.clearCookie("user");
-    res.redirect('/home');
+    req.session.user = "";
+    res.redirect("/home");
   };
 }
 

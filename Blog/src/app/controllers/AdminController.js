@@ -17,7 +17,7 @@ class AdminController {
     }
 
     Promise.all([
-      courseQuery.lean(),
+      courseQuery.lean().populate('level'),
       Course.countDocumentsWithDeleted({ deleted: true }).exec(),
     ])
       .then(([course, deletedCount]) => {
@@ -34,6 +34,7 @@ class AdminController {
     Course.findWithDeleted({ deleted: true })
       .sort({ deletedAt: -1 })
       .lean()
+      .populate('level')
       .then((courses) => {
         res.render("me/trashCourse", {
           courses: multipleMongooseToObject(courses),

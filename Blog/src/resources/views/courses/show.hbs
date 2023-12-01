@@ -3,9 +3,10 @@
     <div class="col-lg-3">
       <button> Học Ngay</button>
     </div>
+    {{!-- {{#with parent}} --}}
     <div class="col-lg-9">
-      <h2>{{course.name}}</h2>
-       <h6>{{course.level}}</h6>
+      <h2 class="mb-3">{{course.name}}</h2>
+       <h6>{{course.level.level}}</h6>
       <iframe
         width="560"
         height="315"
@@ -21,5 +22,6 @@
       </div>
 
     </div>
+    {{!-- {{/with}} --}}
   </div>
 </div>

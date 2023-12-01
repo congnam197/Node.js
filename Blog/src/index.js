@@ -11,13 +11,32 @@ const db = require("./config/db");
 const env = require("dotenv");
 //middleWare
 const SortMiddleware = require("./app/middleware/SortMiddleware");
-
 //thêm các phương thức submit cho form
 const methodOverride = require("method-override");
-
 const cookieParser = require("cookie-parser");
+//thông báo khi redirect
+const flash = require("connect-flash");
+const session = require("express-session");
+const passport = require("passport");
 
 app.use(cookieParser());
+app.use(
+  session({
+    cookie: { maxAge: 60000 },
+    secret: "codegym",
+    saveUninitialized: false,
+    resave: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+app.use((req, res, next) => {
+  res.locals.success_messages = req.flash("success");
+  res.locals.error_messages = req.flash("error");
+  res.locals.session = req.session;
+  next();
+});
 
 //config biến mt
 env.config();
@@ -76,9 +95,6 @@ app.engine(
         return `<a href="?_sort&column=${field}&type=${type}">
           <i class="${icon}"></i>
         </a>`;
-      },
-      checkCookie: () => {
-       
       },
     },
   })

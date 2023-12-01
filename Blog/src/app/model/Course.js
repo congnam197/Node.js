@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const slug = require("mongoose-slug-updater");
 const mongooseDelete = require("mongoose-delete");
+ require("./LevelCourse")
 
 const Schema = mongoose.Schema;
 
@@ -10,7 +11,10 @@ const Course = new Schema(
     description: { type: String },
     image: { type: String },
     slug: { type: String, slug: "name", unique: true },
-    level: { type: String },
+    level: {
+      type: Schema.Types.ObjectId,
+      ref: 'level',
+    },
     videoId: { type: String },
   },
   {

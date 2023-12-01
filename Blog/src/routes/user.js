@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { check } = require("express-validator");
-const Verify = require("../app/middleware/verify/Verify")
+const Verify = require("../app/middleware/verify/Verify");
 
 //import đối tượng HomeController
 const userController = require("../app/controllers/UserController");
@@ -36,8 +36,9 @@ router.post(
   userController.login
 );
 
-router.get('/logout', userController.logout);
-
-router.patch('/update/:id',Verify, userController.updateProfile);
+router.get("/logout", userController.logout);
+router.patch("/update/:id", Verify, userController.updateProfile);
+router.get("/verification/:token", userController.verification);
+router.get("/info/:id", userController.getInfo);
 
 module.exports = router;
