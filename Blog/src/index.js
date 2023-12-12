@@ -13,6 +13,8 @@ const env = require("dotenv");
 const SortMiddleware = require("./app/middleware/SortMiddleware");
 //thêm các phương thức submit cho form
 const methodOverride = require("method-override");
+
+//cookie
 const cookieParser = require("cookie-parser");
 //thông báo khi redirect
 const flash = require("connect-flash");
@@ -20,6 +22,7 @@ const session = require("express-session");
 const passport = require("passport");
 
 app.use(cookieParser());
+
 app.use(
   session({
     cookie: { maxAge: 60000 },
@@ -28,8 +31,10 @@ app.use(
     resave: false,
   })
 );
-app.use(passport.initialize());
-app.use(passport.session());
+ app.use(passport.initialize());
+ app.use(passport.session());
+
+ //flassh thông báo
 app.use(flash());
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash("success");
@@ -52,6 +57,7 @@ app.use(express.json());
 
 // config file từ public
 app.use(express.static(path.join(__dirname, "/public")));
+app.use('/public/images',express.static('images'))
 
 //custom middleware
 app.use(SortMiddleware);
@@ -101,6 +107,7 @@ app.engine(
 );
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "resources", "views"));
+
 
 // import database
 db.connect();

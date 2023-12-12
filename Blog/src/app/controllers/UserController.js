@@ -20,6 +20,7 @@ class UserController {
           const message = "Email đã tồn tại ";
           res.render("register", { message });
         } else {
+          //mã hóa mật khẩu
           const salt = await bcrypt.genSalt(10);
           const hashedPassword = await bcrypt.hash(password, salt);
           const newUser = await user.create({
@@ -105,6 +106,7 @@ class UserController {
           const message = "Người dùng không tồn tại.";
           res.render("login", { message });
         } else {
+          // xác thực mật khẩu
           const isPasswordCrt = await bcrypt.compare(
             password,
             existingUser.password
@@ -120,6 +122,10 @@ class UserController {
               secure: true,
               sameSite: "None",
             };
+            //jwt.sign(payload, secretOrPrivateKey, [options, callback])
+            //options:
+            //algorithm (default: HS256)
+            //expiresIn: expressed in seconds or a string describing a time span vercel/ms.
             const token = jwt.sign(
               { email: existingUser.email, id: existingUser._id },
               process.env.JWT_SECRET,
@@ -139,31 +145,32 @@ class UserController {
     }
   };
 
-  // [PATH] /user/update/id
+  // [PUT] /user/update/id
   updateProfile = async (req, res) => {
     const { id: _id } = req.params;
     const { name, avatar } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(_id)) {
-      return res.status(404).send("user not unavailable...");
+    if (req.file) {
+      avatar = req.file.path;
     }
     try {
       const updatedProfile = await user.findByIdAndUpdate(
         _id,
-        { $set: { name: name, avatar: avatar } },
-        { new: true }
+        { $set: { name: name, avatar: avatar } }
+        // { new: true }
       );
       res.status(200).json(updatedProfile);
     } catch (error) {
+      console.log(err);
       res.status(405).json({ message: error.message });
     }
   };
 
   //[GET] /user/info/id
   getInfo = async (req, res, next) => {
-    const {id:_id} = req.params;
+    const { id: _id } = req.params;
     user
-      .findById(_id )
+      .findById(_id)
       .lean()
       .then((user) => {
         console.log(user);
@@ -172,10 +179,22 @@ class UserController {
       .catch(next);
   };
 
+  // [GET] /user/update/id
+  showUpdate = async (req, res, next) => {
+    const { id: _id } = req.params;
+    user
+      .findById(_id)
+      .lean()
+      .then((user) => {
+        console.log(user);
+        res.render("me/update", { user: mongooseToObject(user) });
+      })
+      .catch(next);
+  };
+
   //[GET] /user/logout
   logout = async (req, res, next) => {
     res.clearCookie("SessionID");
-    res.clearCookie("user");
     req.session.user = "";
     res.redirect("/home");
   };

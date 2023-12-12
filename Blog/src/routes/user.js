@@ -6,6 +6,7 @@ const Verify = require("../app/middleware/verify/Verify");
 //import đối tượng HomeController
 const userController = require("../app/controllers/UserController");
 const Validate = require("../app/middleware/Validator");
+const upload = require("../app/middleware/uploadFile");
 router.post(
   "/register",
   check("email")
@@ -37,8 +38,14 @@ router.post(
 );
 
 router.get("/logout", userController.logout);
-router.patch("/update/:id", Verify, userController.updateProfile);
+router.put(
+  "/update/:id",
+  upload.single("avatar"),
+  Verify,
+  userController.updateProfile
+);
 router.get("/verification/:token", userController.verification);
-router.get("/info/:id", userController.getInfo);
+router.get("/info/:id", Verify, userController.getInfo);
+router.get("/update/:id", Verify, userController.showUpdate);
 
 module.exports = router;

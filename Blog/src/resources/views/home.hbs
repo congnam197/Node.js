@@ -1,7 +1,12 @@
 <div class="mt-4 mb-4">
+ 
       {{#if success_messages }}
       <div id="message">{{success_messages}}</div>
-    {{/if}}  <div class="row">
+      {{/if}}  
+      {{#if error_messages }}
+      <div id="error">{{error_messages}}</div>
+      {{/if}} 
+    <div class="row">
     <p>
       <strong>368.232+</strong>
       người khác đã học
@@ -31,8 +36,18 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+  var error = document.getElementById('error').textContent;
+  if(error !=""){ 
+   Swal.fire({
+  title: "Oops ...",
+  text: error,
+  icon: "error",
+  timer:3000,
+  showConfirmButton: false,
+  })
+  } 
+
   var message = document.getElementById('message').textContent;
-  console.log(message); 
   if(message !=""){ 
     Swal.fire({
       text:message,

@@ -7,10 +7,12 @@ const adminController = require("../app/controllers/AdminController");
 
 router.get(
   "/stored/courses",
-  //  Verify,
-  //  VerifyRole,
+   Verify,
+   VerifyRole,
   adminController.storedCourses
 );
-router.get("/trash/courses", Verify, VerifyRole, adminController.trashCourses);
+router.get("/trash/courses", 
+Verify, VerifyRole, 
+adminController.trashCourses);
 
 module.exports = router;

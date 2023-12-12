@@ -2,11 +2,9 @@ const VerifyRole = async (req, res, next) => {
   try {
     const user = req.user;
     const { role } = user;
-    let messAuth ={};
     console.log("role", role);
     if (role != "0x88") {
-      messAuth[message]= "Bạn không được phép xem trang này ";
-       res.authError =messAuth;
+      res.render('error/errorPage')
     }
     next();
   } catch (err) {

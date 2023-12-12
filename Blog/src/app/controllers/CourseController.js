@@ -21,10 +21,6 @@ class CourseController {
 
   //[GET] /courses/create
   create(req, res, next) {
-    const message = res.authError;
-    if (message) {
-      res.render("error/error-page");
-    }
     LevelCourse.find({})
       .lean()
       .then((level) => {
